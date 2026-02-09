@@ -1,3 +1,11 @@
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+
+
 # Operating System
 .DS_Store
 .DS_Store?
