@@ -4,7 +4,7 @@ import numpy as np
 from numba import jit
 
 #-----------------------COFNIG---------------------------------------------
-RESOLUTION_RAMP_UP = [256, 512, 1024, 2048, 4096, 8192]  # Different resolutions to test
+RESOLUTION_RAMP_UP = [256, 512, 1024]  # Different resolutions to test
 
 YMIN, YMAX = -1.5, 1.5
 XMIN, XMAX = -2.0, 1.0
@@ -28,7 +28,7 @@ def export_to_csv(filename, data):
         import csv
         with open(filename, 'w', newline='') as f:
             writer = csv.writer(f)
-            writer.writerow(['Implementation', 'Time (seconds)'])
+            writer.writerow(['Implementation','Resolution','Time (seconds)'])
             writer.writerows(data)
     else:
         # Mandelbrot set array
