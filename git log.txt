@@ -1,0 +1,89 @@
+2026-03-12 1806abf Merge pull request #1 from AAUKajetan/local-mac
+2026-03-12 a3e6b33 Merge branch 'main' into local-mac
+2026-03-12 d4b4f4a results and csvs
+
+ miniproject-1/miniproject-1.py           |   40 +-
+ miniproject-1/results/native_mb_set.csv  | 1024 ++++++++++++++++++++++++++++++
+ miniproject-1/results/numba_mb_set.csv   | 1024 ++++++++++++++++++++++++++++++
+ miniproject-1/results/numpy_mb_set.csv   | 1024 ++++++++++++++++++++++++++++++
+ miniproject-1/results/timing_results.csv |    4 +
+ 5 files changed, 3103 insertions(+), 13 deletions(-)
+2026-03-12 b667524 result to CSV
+
+ miniproject-1/miniproject-1.py | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+2026-03-12 e5fafcf numba implemetation
+
+ miniproject-1/miniproject-1.py | 75 ++++++++++++++++++++++++++++--------------
+ 1 file changed, 51 insertions(+), 24 deletions(-)
+2026-03-12 04d5a49  Miniproject 1: Native and NumPy
+
+ miniproject-1/README.md                      | 135 -----------------------
+ miniproject-1/basic.py                       |  41 -------
+ miniproject-1/main.py                        | 157 ---------------------------
+ miniproject-1/miniproject-1-Assignment.ipynb |  86 +++++++++++++++
+ miniproject-1/miniproject-1.py               |  95 ++++++++++++++++
+ 5 files changed, 181 insertions(+), 333 deletions(-)
+2026-03-02 701dbf4 class4
+
+ README.md               |   2 +
+ class3/exercises.ipynb  | 125 ++++++++++++++++++++++++++++
+ class4/exercises.ipynb  |  77 ++++++++++++++++++
+ miniproject-1/README.md | 135 +++++++++++++++++++++++++++++++
+ miniproject-1/basic.py  |  41 ++++++++++
+ miniproject-1/main.py   | 210 ++++++++++++++++++++++++++++++++++--------------
+ 6 files changed, 531 insertions(+), 59 deletions(-)
+2026-03-02 478eefd hanoi tower fun exercise
+
+ .gitignore                |   2 +
+ class2/exercises.ipynb    |   4 +-
+ hanoi_tower/README.md     | 283 ++++++++++++++++
+ hanoi_tower/main.py       | 811 ++++++++++++++++++++++++++++++++++++++++++++++
+ hanoi_tower/play.py       | 191 +++++++++++
+ hanoi_tower/solve.py      | 256 +++++++++++++++
+ hanoi_tower/submit_hpc.sh |  47 +++
+ hanoi_tower/test_local.py |  50 +++
+ hanoi_tower/train_hpc.py  |  95 ++++++
+ requirements.txt          |   1 +
+ 10 files changed, 1738 insertions(+), 2 deletions(-)
+2026-02-23 b992324 hello from the VM
+
+ class2/exercises.ipynb | 36 ++++++++++++++++++------------------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
+2026-02-22 11c525f cleanup
+
+ class2/exercises.ipynb | 61 ++++++++++++++++++++++++++------------------------
+ 1 file changed, 32 insertions(+), 29 deletions(-)
+2026-02-22 679f196 cleanup
+
+ class2/exercises.ipynb | 70 ++++++++++++++++++++++----------------------------
+ 1 file changed, 31 insertions(+), 39 deletions(-)
+2026-02-22 e4f89dd cleanup
+
+ class2/exercises.ipynb | 67 ++++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 57 insertions(+), 10 deletions(-)
+2026-02-22 1d88870 class 2 catchup
+
+ class2/class.ipynb     | 701 +++++++++++++++++++++++++++++++++++++++++++++++++
+ class2/exercises.ipynb | 247 +++++++++++++++++
+ requirements.txt       |   1 +
+ 3 files changed, 949 insertions(+)
+2026-02-10 a632b16 first class
+
+ requirements.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+2026-02-10 400b5bf first class
+
+ miniproject-1/main.py | 65 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 65 insertions(+)
+2026-02-09 eacdc12 init
+
+ .gitignore              |  8 ++++++++
+ class1/1-1-registers.py | 53 +++++++++++++++++++++++++++++++++++++++++++++++++
+ requirements.txt        |  1 +
+ 3 files changed, 62 insertions(+)
+2026-02-09 2d26188 init
+
+ .../copilot-guardrails.instructions.md             | 33 +++++++++
+ .gitignore                                         | 78 ++++++++++++++++++++++
+ 2 files changed, 111 insertions(+)
