@@ -1,4 +1,4 @@
-Implementation,Time (seconds)
+Implementation,Resolution,Time (seconds)
 Native Python,256,0.23049975000321865
 NumPy Implementation,256,0.039786458015441895
 Numba Implementation,256,0.1121719169896096
