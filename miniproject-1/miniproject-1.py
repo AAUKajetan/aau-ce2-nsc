@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import time
 import numpy as np
+from numba import jit
 
 #-----------------------COFNIG---------------------------------------------
 
@@ -24,36 +25,28 @@ def visualize(title, mb_set, xmin, xmax, ymin, ymax):
 #                                                                          |
 #--------------------------------------------------------------------------
 def native_python_implementation(xmin, xmax, ymin, ymax, width, height, max_iter):
-    grid = []
-    for y in range(height):
-        row = []
-        # Fix: Start from ymax and go down to ymin
-        p_y = ymax - (y / height) * (ymax - ymin)
-        for x in range(width):
-            p_x = xmin + (x / width) * (xmax - xmin)
-            row.append((p_x, p_y))        
-        grid.append(row)
-    
-    c_grid = []
-    for row in grid:
-        c_row = []
-        for point in row:
-            (x, y) = point
-            c = x + 1J * y
-            c_row.append(c)
-        c_grid.append(c_row)
-
     mb_set = []
-    for c_row in c_grid:
+
+    for y in range(height):
         mb_row = []
-        for c in c_row:
+        #Y coordinates  space the points with the given space and resolution
+        p_y = ymin + (y / (height - 1)) * (ymax - ymin)
+        
+        for x in range(width):
+            # X coordinates space the points with the given space and resolution
+            p_x = xmin + (x / (width - 1)) * (xmax - xmin)
+            c = p_x + 1j * p_y
+            
             z = 0
             n = 0
-            while (abs(z) <= 2 and n < max_iter):
+            # Match NumPy behavior: record when escape happens
+            while abs(z) <= 2 and n < max_iter:
                 z = z ** 2 + c
                 n += 1
+            
             mb_row.append(n)
         mb_set.append(mb_row)
+    
     return mb_set
 
 def numpy_implementation(xmin, xmax, ymin, ymax, width, height, max_iter):
@@ -76,12 +69,37 @@ def numpy_implementation(xmin, xmax, ymin, ymax, width, height, max_iter):
 
     return output
 
+@jit(nopython=True)
+def numba_implementation(xmin, xmax, ymin, ymax, width, height, max_iter):
+    mb_set = []
+    
+    for y in range(height):
+        mb_row = []
+        # Fix: Map y from top to bottom correctly
+        p_y = ymin + (y / (height - 1)) * (ymax - ymin)
+        
+        for x in range(width):
+            p_x = xmin + (x / (width - 1)) * (xmax - xmin)
+            c = p_x + 1j * p_y
+            
+            z = 0
+            n = 0
+            # Match NumPy behavior: record when escape happens
+            while abs(z) <= 2 and n < max_iter:
+                z = z ** 2 + c
+                n += 1
+            
+            mb_row.append(n)
+        mb_set.append(mb_row)
+    
+    return mb_set
+
 #--------------------------------Execute and time------------------------------------------------
 print(60*"=")
 native_start = time.perf_counter()
 native_mb_set = native_python_implementation(XMIN, XMAX, YMIN, YMAX, WIDTH, HEIGHT, MAX_ITER)
 native_end = time.perf_counter()
-print(f"Native Python: {native_end - native_start:.6f} seconds")
+print(f"Native Python:        {native_end - native_start:.6f} seconds")
 print(60*"=")
 
 numpy_start = time.perf_counter()
@@ -90,6 +108,15 @@ numpy_end = time.perf_counter()
 print(f"NumPy Implementation: {numpy_end - numpy_start:.6f} seconds")
 print(60*"=")
 
+# Warm up JIT
+_ = numba_implementation(1, 1, 1, 1, 2, 2, 1)
+
+numba_start = time.perf_counter()
+numba_mb_set = numba_implementation(XMIN, XMAX, YMIN, YMAX, WIDTH, HEIGHT, MAX_ITER)
+numba_end = time.perf_counter()
+print(f"Numba Implementation: {numba_end - numba_start:.6f} seconds")
+print(60*"=")
 
 visualize("Native Implementation", native_mb_set, XMIN, XMAX, YMIN, YMAX)
 visualize("NumPy Implementation", numpy_mb_set, XMIN, XMAX, YMIN, YMAX)
+visualize("Numba Implementation", numba_mb_set, XMIN, XMAX, YMIN, YMAX)
