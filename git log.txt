@@ -1,5 +1,46 @@
-2026-03-12 1806abf Merge pull request #1 from AAUKajetan/local-mac
-2026-03-12 a3e6b33 Merge branch 'main' into local-mac
+2026-03-12 8e5599c Add large CSV files to .gitignore
+
+ .gitignore | 2 ++
+ 1 file changed, 2 insertions(+)
+2026-03-12 f212ef4 gitignore large fiels
+
+ .gitignore | 3 +++
+ 1 file changed, 3 insertions(+)
+2026-03-12 669e74a performance tests
+
+ miniproject-1/miniproject-1-Assignment.ipynb       |    6 -
+ miniproject-1/miniproject-1.py                     |   70 +-
+ ...tive_mb_set.csv => native_mb_set_1024x1024.csv} |    0
+ miniproject-1/results/native_mb_set_2048x2048.csv  | 2048 ++++++++++
+ miniproject-1/results/native_mb_set_256x256.csv    |  256 ++
+ miniproject-1/results/native_mb_set_4096x4096.csv  | 4096 ++++++++++++++++++++
+ miniproject-1/results/native_mb_set_512x512.csv    |  512 +++
+ ...numba_mb_set.csv => numba_mb_set_1024x1024.csv} |    0
+ miniproject-1/results/numba_mb_set_2048x2048.csv   | 2048 ++++++++++
+ miniproject-1/results/numba_mb_set_256x256.csv     |  256 ++
+ miniproject-1/results/numba_mb_set_4096x4096.csv   | 4096 ++++++++++++++++++++
+ miniproject-1/results/numba_mb_set_512x512.csv     |  512 +++
+ ...numpy_mb_set.csv => numpy_mb_set_1024x1024.csv} |    0
+ miniproject-1/results/numpy_mb_set_2048x2048.csv   | 2048 ++++++++++
+ miniproject-1/results/numpy_mb_set_256x256.csv     |  256 ++
+ miniproject-1/results/numpy_mb_set_4096x4096.csv   | 4096 ++++++++++++++++++++
+ miniproject-1/results/numpy_mb_set_512x512.csv     |  512 +++
+ miniproject-1/results/timing_results.csv           |   21 +-
+ 18 files changed, 20796 insertions(+), 37 deletions(-)
+2026-03-12 5f36113 Add note about Git logs availability
+
+ README.md | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+2026-03-12 561c8fa adding readme
+
+ README.md | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+2026-03-12 63fb864 adding logs
+
+ git log.txt | 89 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 89 insertions(+)
+2026-03-12 acbd586 Merge pull request #1 from AAUKajetan/local-mac
+2026-03-12 de284bf Merge branch 'main' into local-mac
 2026-03-12 d4b4f4a results and csvs
 
  miniproject-1/miniproject-1.py           |   40 +-
