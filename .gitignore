@@ -5,6 +5,8 @@ __pycache__/
 *.pyd
 *.db
 
+#pkl files
+*.pkl
 
 # Operating System
 .DS_Store

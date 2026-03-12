@@ -1,0 +1,4 @@
+Implementation,Time (seconds)
+Native Python,3.462526625022292
+NumPy Implementation,0.6759890830144286
+Numba Implementation,0.23712512501515448
