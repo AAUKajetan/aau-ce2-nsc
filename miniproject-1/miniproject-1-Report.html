@@ -8050,6 +8050,17 @@ z_{n+1} = z_n^2 + c
 <p><strong>JIT Warmup Effect:</strong> At 256×256 resolution, Numba appears slower than NumPy (0.112 vs 0.040 seconds). This is because the JIT compilation overhead dominates at very low problem sizes. Once the function is compiled and the problem becomes larger, Numba's compiled code substantially outperforms NumPy's interpreted operations.</p>
 <h3 id="7.-CSV-export">7. CSV export<a class="anchor-link" href="#7.-CSV-export">¶</a></h3><p>To prove that the results are real the CSV files with results are attahced (the larges set was too big for github and it was removed)</p>
 <hr/>
+<h3 id="8.-Reflections">8. Reflections<a class="anchor-link" href="#8.-Reflections">¶</a></h3><ul>
+<li><p>the biggest challenge I encountered:
+Personally, visualizing the cmplex numbers was a bit tricky since i have never worked woht it beofre. THe step by step apprach in python really helpt. Originally to unsure if I fully understand I have calcualte the grid indiivividually for each steps: even spaces points in range, c values in each point, and only then the number of itteration for the point to escape.</p>
+</li>
+<li><p>the most surprising result in your experiments:
+I have originally though that puting the np apprach into the numba woudl be the faster havevetr the step by step apprach turne out ot be nicer to compile in JIT. Lastly, Fractals are very cool! working with 2D sets is very nerdy - beeing able to visualize them woth mat plow make the whole work nicer.</p>
+</li>
+<li><p>what you learned from this assignment:
+I know what the mandelbord set is (WOOOOHOO!!). Futhermore the use of boolen mask in the vectorized approach was a very clever idea that I have not thought on my first attempt.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
