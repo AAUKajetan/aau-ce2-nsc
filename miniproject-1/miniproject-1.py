@@ -12,7 +12,6 @@ WIDTH, HEIGHT = 1024, 1024
 
 #-----------------Utilities (visualization + CSV Exports)------------------
 def visualize(title, mb_set, xmin, xmax, ymin, ymax):
-    """Visualize Mandelbrot set"""
     plt.figure(figsize=(8,8))
     plt.imshow(mb_set, extent=[xmin, xmax, ymin, ymax], cmap='hot', origin='lower')
     plt.xlabel('Re')
@@ -20,6 +19,9 @@ def visualize(title, mb_set, xmin, xmax, ymin, ymax):
     plt.title(title)
     plt.colorbar(label='Iterations')
     plt.show()
+
+def export_to_csv(filename, mb_set):
+    np.savetxt(filename, mb_set, delimiter=',', fmt='%d')
 
 #---------------- Different ways to calculate the MB ----------------------
 #                                                                          |
@@ -120,3 +122,10 @@ print(60*"=")
 visualize("Native Implementation", native_mb_set, XMIN, XMAX, YMIN, YMAX)
 visualize("NumPy Implementation", numpy_mb_set, XMIN, XMAX, YMIN, YMAX)
 visualize("Numba Implementation", numba_mb_set, XMIN, XMAX, YMIN, YMAX)
+
+save_csv = input("Do you want to save the results to CSV? (y/n): ")
+if save_csv.lower() == 'y': 
+    export_to_csv("results/native_mb_set.csv", native_mb_set)
+    export_to_csv("results/numpy_mb_set.csv", numpy_mb_set)
+    export_to_csv("results/numba_mb_set.csv", numba_mb_set)
+    print("Results saved to CSV files.")
