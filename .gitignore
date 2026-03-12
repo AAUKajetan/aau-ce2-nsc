@@ -86,3 +86,6 @@ htmlcov/
 *.zip
 *.tar.gz
 *.rar
+
+*8192.csv
+
