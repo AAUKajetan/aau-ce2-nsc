@@ -20,8 +20,17 @@ def visualize(title, mb_set, xmin, xmax, ymin, ymax):
     plt.colorbar(label='Iterations')
     plt.show()
 
-def export_to_csv(filename, mb_set):
-    np.savetxt(filename, mb_set, delimiter=',', fmt='%d')
+def export_to_csv(filename, data):
+    if isinstance(data, list) and isinstance(data[0], tuple):
+        # Timing results
+        import csv
+        with open(filename, 'w', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(['Implementation', 'Time (seconds)'])
+            writer.writerows(data)
+    else:
+        # Mandelbrot set array
+        np.savetxt(filename, data, delimiter=',', fmt='%d')
 
 #---------------- Different ways to calculate the MB ----------------------
 #                                                                          |
@@ -97,35 +106,40 @@ def numba_implementation(xmin, xmax, ymin, ymax, width, height, max_iter):
     return mb_set
 
 #--------------------------------Execute and time------------------------------------------------
-print(60*"=")
+results = []
 native_start = time.perf_counter()
 native_mb_set = native_python_implementation(XMIN, XMAX, YMIN, YMAX, WIDTH, HEIGHT, MAX_ITER)
 native_end = time.perf_counter()
-print(f"Native Python:        {native_end - native_start:.6f} seconds")
-print(60*"=")
+results.append(("Native Python", native_end - native_start))
 
 numpy_start = time.perf_counter()
 numpy_mb_set = numpy_implementation(XMIN, XMAX, YMIN, YMAX, WIDTH, HEIGHT, MAX_ITER)
 numpy_end = time.perf_counter()
-print(f"NumPy Implementation: {numpy_end - numpy_start:.6f} seconds")
-print(60*"=")
-
+results.append(("NumPy Implementation", numpy_end - numpy_start))
 # Warm up JIT
 _ = numba_implementation(1, 1, 1, 1, 2, 2, 1)
 
 numba_start = time.perf_counter()
 numba_mb_set = numba_implementation(XMIN, XMAX, YMIN, YMAX, WIDTH, HEIGHT, MAX_ITER)
 numba_end = time.perf_counter()
-print(f"Numba Implementation: {numba_end - numba_start:.6f} seconds")
-print(60*"=")
+results.append(("Numba Implementation", numba_end - numba_start))
 
-visualize("Native Implementation", native_mb_set, XMIN, XMAX, YMIN, YMAX)
-visualize("NumPy Implementation", numpy_mb_set, XMIN, XMAX, YMIN, YMAX)
-visualize("Numba Implementation", numba_mb_set, XMIN, XMAX, YMIN, YMAX)
+#uncoment if you want to see the nce visualization of the sets :)
+#visualize("Native Implementation", native_mb_set, XMIN, XMAX, YMIN, YMAX)
+#visualize("NumPy Implementation", numpy_mb_set, XMIN, XMAX, YMIN, YMAX)
+#visualize("Numba Implementation", numba_mb_set, XMIN, XMAX, YMIN, YMAX)
+
+# Print the results
+print("\nResults:")
+for name, time_taken in results:
+    print(60*"=")
+    print(f"{name}: {time_taken:.6f} seconds")
 
 save_csv = input("Do you want to save the results to CSV? (y/n): ")
 if save_csv.lower() == 'y': 
     export_to_csv("results/native_mb_set.csv", native_mb_set)
     export_to_csv("results/numpy_mb_set.csv", numpy_mb_set)
     export_to_csv("results/numba_mb_set.csv", numba_mb_set)
+    export_to_csv("results/timing_results.csv", results)
     print("Results saved to CSV files.")
+
