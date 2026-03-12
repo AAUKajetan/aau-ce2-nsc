@@ -4,10 +4,12 @@ import numpy as np
 from numba import jit
 
 #-----------------------COFNIG---------------------------------------------
+RESOLUTION_RAMP_UP = [256, 512, 1024, 2048, 4096, 8192]  # Different resolutions to test
 
 YMIN, YMAX = -1.5, 1.5
 XMIN, XMAX = -2.0, 1.0
 MAX_ITER = 100
+#for basic tests
 WIDTH, HEIGHT = 1024, 1024
 
 #-----------------Utilities (visualization + CSV Exports)------------------
@@ -106,40 +108,52 @@ def numba_implementation(xmin, xmax, ymin, ymax, width, height, max_iter):
     return mb_set
 
 #--------------------------------Execute and time------------------------------------------------
+# Ask at the beginning for better performance
+save_csv = input("Do you want to save the results to CSV? (y/n): ").lower() == 'y'
+
 results = []
-native_start = time.perf_counter()
-native_mb_set = native_python_implementation(XMIN, XMAX, YMIN, YMAX, WIDTH, HEIGHT, MAX_ITER)
-native_end = time.perf_counter()
-results.append(("Native Python", native_end - native_start))
 
-numpy_start = time.perf_counter()
-numpy_mb_set = numpy_implementation(XMIN, XMAX, YMIN, YMAX, WIDTH, HEIGHT, MAX_ITER)
-numpy_end = time.perf_counter()
-results.append(("NumPy Implementation", numpy_end - numpy_start))
-# Warm up JIT
-_ = numba_implementation(1, 1, 1, 1, 2, 2, 1)
+for res in RESOLUTION_RAMP_UP:
+    print(f"\nCalculating Mandelbrot set at resolution {res}x{res}...")
+    WIDTH, HEIGHT = res, res
+    native_start = time.perf_counter()
+    native_mb_set = native_python_implementation(XMIN, XMAX, YMIN, YMAX, WIDTH, HEIGHT, MAX_ITER)
+    native_end = time.perf_counter()
+    results.append(("Native Python", res, native_end - native_start))
 
-numba_start = time.perf_counter()
-numba_mb_set = numba_implementation(XMIN, XMAX, YMIN, YMAX, WIDTH, HEIGHT, MAX_ITER)
-numba_end = time.perf_counter()
-results.append(("Numba Implementation", numba_end - numba_start))
+    numpy_start = time.perf_counter()
+    numpy_mb_set = numpy_implementation(XMIN, XMAX, YMIN, YMAX, WIDTH, HEIGHT, MAX_ITER)
+    numpy_end = time.perf_counter()
+    results.append(("NumPy Implementation", res, numpy_end - numpy_start))
 
-#uncoment if you want to see the nce visualization of the sets :)
-#visualize("Native Implementation", native_mb_set, XMIN, XMAX, YMIN, YMAX)
-#visualize("NumPy Implementation", numpy_mb_set, XMIN, XMAX, YMIN, YMAX)
-#visualize("Numba Implementation", numba_mb_set, XMIN, XMAX, YMIN, YMAX)
+    # Warm up JIT
+    _ = numba_implementation(1, 1, 1, 1, 2, 2, 1)
+
+    numba_start = time.perf_counter()
+    numba_mb_set = numba_implementation(XMIN, XMAX, YMIN, YMAX, WIDTH, HEIGHT, MAX_ITER)
+    numba_end = time.perf_counter()
+    results.append(("Numba Implementation", res, numba_end - numba_start))
+
+    # Save results for this resolution if user chose to
+    if save_csv:
+        export_to_csv(f"results/native_mb_set_{res}x{res}.csv", native_mb_set)
+        export_to_csv(f"results/numpy_mb_set_{res}x{res}.csv", numpy_mb_set)
+        export_to_csv(f"results/numba_mb_set_{res}x{res}.csv", numba_mb_set)
+        print(f"Saved CSV files for resolution {res}x{res}")
+
+    #uncomment if you want to see the nce visualization of the sets :)
+    #visualize("Native Implementation", native_mb_set, XMIN, XMAX, YMIN, YMAX)
+    #visualize("NumPy Implementation", numpy_mb_set, XMIN, XMAX, YMIN, YMAX)
+    #visualize("Numba Implementation", numba_mb_set, XMIN, XMAX, YMIN, YMAX)
 
 # Print the results
 print("\nResults:")
-for name, time_taken in results:
+for name, resolution, time_taken in results:
     print(60*"=")
-    print(f"{name}: {time_taken:.6f} seconds")
+    print(f"{name} at {resolution}x{resolution}: {time_taken:.6f} seconds")
 
-save_csv = input("Do you want to save the results to CSV? (y/n): ")
-if save_csv.lower() == 'y': 
-    export_to_csv("results/native_mb_set.csv", native_mb_set)
-    export_to_csv("results/numpy_mb_set.csv", numpy_mb_set)
-    export_to_csv("results/numba_mb_set.csv", numba_mb_set)
+# Save results if user chose to
+if save_csv:
     export_to_csv("results/timing_results.csv", results)
     print("Results saved to CSV files.")
 
