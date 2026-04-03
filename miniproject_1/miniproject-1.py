@@ -12,6 +12,8 @@ MAX_ITER = 100
 #for basic tests
 WIDTH, HEIGHT = 1024, 1024
 
+RESULT_DIR = "results/"
+
 #-----------------Utilities (visualization + CSV Exports)------------------
 def visualize(title, mb_set, xmin, xmax, ymin, ymax):
     plt.figure(figsize=(8,8))
@@ -136,9 +138,9 @@ for res in RESOLUTION_RAMP_UP:
 
     # Save results for this resolution if user chose to
     if save_csv:
-        export_to_csv(f"results/native_mb_set_{res}x{res}.csv", native_mb_set)
-        export_to_csv(f"results/numpy_mb_set_{res}x{res}.csv", numpy_mb_set)
-        export_to_csv(f"results/numba_mb_set_{res}x{res}.csv", numba_mb_set)
+        export_to_csv(f"{RESULT_DIR}/native_mb_set_{res}x{res}.csv", native_mb_set)
+        export_to_csv(f"{RESULT_DIR}/numpy_mb_set_{res}x{res}.csv", numpy_mb_set)
+        export_to_csv(f"{RESULT_DIR}/numba_mb_set_{res}x{res}.csv", numba_mb_set)
         print(f"Saved CSV files for resolution {res}x{res}")
 
     #uncomment if you want to see the nce visualization of the sets :)
@@ -154,6 +156,6 @@ for name, resolution, time_taken in results:
 
 # Save results if user chose to
 if save_csv:
-    export_to_csv("results/timing_results.csv", results)
+    export_to_csv(f"{RESULT_DIR}/timing_results.csv", results)
     print("Results saved to CSV files.")
 

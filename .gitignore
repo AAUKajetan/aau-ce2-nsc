@@ -89,5 +89,5 @@ htmlcov/
 
 *8192.csv
 
-miniproject-1/results/*_8192x8192.csv
+*/results/*_8192x8192.csv
 
