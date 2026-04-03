@@ -160,8 +160,8 @@ def plot_results(results: list, resolution: int):
 if __name__ == "__main__":
     # Configuration
     RESOLUTION = RESOLUTION_RAMP_UP[4]  
-    CHUNK_SIZES = [32, 64, 128, 256, 512]  # Different chunk sizes to test
-    PROCESS_COUNTS = list(range(1, mp.cpu_count() + 1))
+    CHUNK_SIZES = [64, 128, 256, 512, 1024]  # Different chunk sizes to test
+    PROCESS_COUNTS = [4,5,6,7,8,9,10]  # Different numbers of processes to test
     NUM_RUNS = 2  # Average over multiple runs for stability
     
     print(f"System has {mp.cpu_count()} CPU cores")

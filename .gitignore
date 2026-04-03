@@ -87,7 +87,7 @@ htmlcov/
 *.tar.gz
 *.rar
 
-*8192.csv
+*x8192.csv
 
 */results/*_8192x8192.csv
 

@@ -1,5 +1,5 @@
 #-----------------------COFNIG---------------------------------------------
-RESOLUTION_RAMP_UP = [256, 512, 1024, 2048]  # Different resolutions to test
+RESOLUTION_RAMP_UP = [256, 512, 1024, 2048, 4096, 8192]  # Different resolutions to test
 
 CHUNK_SIZE = 128  # Size of chunks for multiprocessing
 
