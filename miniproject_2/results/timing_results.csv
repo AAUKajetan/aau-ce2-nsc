@@ -1,0 +1,7 @@
+Implementation,Resolution,Time (seconds)
+Multi-process Numpy,256,0.7508014579070732
+Multi-process Numpy,512,0.7433196669444442
+Multi-process Numpy,1024,0.9033172921044752
+Multi-process Numpy,2048,1.7201689160428941
+Multi-process Numpy,4096,4.847884916001931
+Multi-process Numpy,8192,18.05018541601021
