@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import time
 import numpy as np
-from numba import jit
+# from numba import jit
 
 from config import XMIN, XMAX, YMIN, YMAX, MAX_ITER, RESOLUTION_RAMP_UP, RESULT_DIR
 
@@ -76,7 +76,7 @@ def numpy_implementation(xmin, xmax, ymin, ymax, width, height, max_iter):
 
     return output
 
-@jit(nopython=True)
+# @jit(nopython=True)
 def numba_implementation(xmin, xmax, ymin, ymax, width, height, max_iter):
     mb_set = []
     

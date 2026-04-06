@@ -19,25 +19,18 @@ Then run this script from dask-head:
 
 import time
 import csv
+import dask
 import numpy as np
 import dask.array as da
-from distributed import Client, as_completed
+import matplotlib.pyplot as plt
+from distributed import Client
 
-from config import XMIN, XMAX, YMIN, YMAX, MAX_ITER, RESOLUTION_RAMP_UP, RESULT_DIR
+from config import XMIN, XMAX, YMIN, YMAX, MAX_ITER, RESOLUTION_RAMP_UP, RESULT_DIR, SCHEDULER_ADDRESS
 from miniproject_1 import numpy_implementation, export_to_csv, visualize
-from dask_implementation import dask_implementation_chunked
 
-# ── Scheduler address ────────────────────────────────────────────────────────
-SCHEDULER_ADDRESS = "tcp://dask-head:8786"
-# ─────────────────────────────────────────────────────────────────────────────
-
-
-# ---------------------------------------------------------------------------
-# Core computation helper (must be importable on every worker node)
-# ---------------------------------------------------------------------------
 
 def _mandelbrot_chunk(c_chunk: np.ndarray, max_iter: int) -> np.ndarray:
-    """Compute Mandelbrot iteration counts for a 2-D chunk of complex values."""
+    """Pure-NumPy Mandelbrot kernel — defined here so it can be serialized to workers."""
     z = np.zeros_like(c_chunk)
     output = np.zeros(c_chunk.shape, dtype=np.int32)
     for n in range(max_iter):
@@ -47,6 +40,29 @@ def _mandelbrot_chunk(c_chunk: np.ndarray, max_iter: int) -> np.ndarray:
         z[mask] = z[mask] ** 2 + c_chunk[mask]
         output[mask] = n + 1
     return output
+
+
+def _compute_subregion(xmin, xmax, ymin, ymax, width, height, max_iter):
+    """
+    Compute Mandelbrot for a subregion from scalar bounds only.
+    No numpy arrays are received — the worker builds its own grid,
+    avoiding cross-version numpy/python serialisation issues.
+    """
+    x = np.linspace(xmin, xmax, width)
+    y = np.linspace(ymin, ymax, height)
+    X, Y = np.meshgrid(x, y)
+    c = (X + 1j * Y).astype(np.complex128)
+    z = np.zeros_like(c)
+    output = np.zeros(c.shape, dtype=np.int32)
+    for n in range(max_iter):
+        mask = np.abs(z) <= 2
+        if not mask.any():
+            break
+        z[mask] = z[mask] ** 2 + c[mask]
+        output[mask] = n + 1
+    return output
+
+
 
 
 # ---------------------------------------------------------------------------
@@ -62,27 +78,34 @@ def distributed_map_blocks(
     chunk_size: int = 256,
 ) -> np.ndarray:
     """
-    Use dask.array.map_blocks submitted through a Distributed client.
-
-    The whole dask graph is computed by the connected cluster, so each
-    chunk lands on a different worker process automatically.
+    Build the result as a large Dask array assembled from da.from_delayed blocks.
+    Each block is a delayed call to _compute_subregion with scalar bounds only —
+    no numpy arrays are serialised from head to workers, avoiding cross-version
+    pickling issues. The result is a proper Dask array until client.compute().
     """
-    x = np.linspace(xmin, xmax, width)
-    y = np.linspace(ymin, ymax, height)
-    X, Y = np.meshgrid(x, y)
-    c = (X + 1j * Y).astype(np.complex128)
+    x_scale = (xmax - xmin) / width
+    y_scale = (ymax - ymin) / height
 
-    c_dask = da.from_array(c, chunks=(chunk_size, chunk_size))
+    rows = []
+    for row in range(0, height, chunk_size):
+        ch = min(chunk_size, height - row)
+        row_blocks = []
+        for col in range(0, width, chunk_size):
+            cw = min(chunk_size, width - col)
+            r_xmin = xmin + col * x_scale
+            r_xmax = xmin + (col + cw) * x_scale
+            r_ymin = ymin + row * y_scale
+            r_ymax = ymin + (row + ch) * y_scale
+            block = da.from_delayed(
+                dask.delayed(_compute_subregion)(r_xmin, r_xmax, r_ymin, r_ymax, cw, ch, max_iter),
+                shape=(ch, cw),
+                dtype=np.int32,
+            )
+            row_blocks.append(block)
+        rows.append(da.concatenate(row_blocks, axis=1))
 
-    result = da.map_blocks(
-        _mandelbrot_chunk,
-        c_dask,
-        dtype=np.int32,
-        max_iter=max_iter,        # passed as kwarg to the function
-    )
-
-    # client.compute returns a Future; .result() blocks until done
-    return client.compute(result).result()
+    result_dask = da.concatenate(rows, axis=0)
+    return client.compute(result_dask).result()
 
 
 def distributed_futures(
@@ -94,30 +117,21 @@ def distributed_futures(
     chunk_size: int = 256,
 ) -> np.ndarray:
     """
-    Manually scatter chunks as Futures using client.submit.
-
-    Each row-slice of `chunk_size` rows is sent as an independent task,
-    giving explicit control over task granularity.
+    Submit each row-slice as an explicit Future via client.submit.
+    Only scalar bounds are sent; each worker builds its own subarray.
     """
-    x = np.linspace(xmin, xmax, width)
-    y = np.linspace(ymin, ymax, height)
-    X, Y = np.meshgrid(x, y)
-    c = (X + 1j * Y).astype(np.complex128)
+    y_scale = (ymax - ymin) / height
 
-    # Split into row chunks
-    row_slices = range(0, height, chunk_size)
     futures = {}
-    for row_start in row_slices:
-        row_end = min(row_start + chunk_size, height)
-        c_chunk = c[row_start:row_end, :]
-        futures[row_start] = client.submit(_mandelbrot_chunk, c_chunk, max_iter)
+    for row in range(0, height, chunk_size):
+        ch = min(chunk_size, height - row)
+        r_ymin = ymin + row * y_scale
+        r_ymax = ymin + (row + ch) * y_scale
+        futures[row] = (ch, client.submit(_compute_subregion, xmin, xmax, r_ymin, r_ymax, width, ch, max_iter))
 
-    # Collect results in order
     output = np.empty((height, width), dtype=np.int32)
-    for row_start, future in futures.items():
-        row_end = min(row_start + chunk_size, height)
-        output[row_start:row_end, :] = future.result()
-
+    for row, (ch, future) in futures.items():
+        output[row:row + ch, :] = future.result()
     return output
 
 
@@ -196,6 +210,54 @@ def benchmark_distributed(
     return results
 
 
+def plot_results(results, save_path: str):
+    """Plot execution time and speedup for distributed benchmark results."""
+    numpy_results = {r[1]: r[3] for r in results if r[0] == "NumPy"}
+    resolutions = sorted(numpy_results.keys())
+
+    strategies = {}
+    for r in results:
+        if r[0] == "NumPy":
+            continue
+        key = f"{r[0]} chunk={r[2]}"
+        strategies.setdefault(key, []).append((r[1], r[3]))
+
+    fig, axes = plt.subplots(1, 2, figsize=(15, 6))
+    fig.suptitle("Dask Distributed Benchmark", fontsize=14)
+
+    # — Execution time —
+    axes[0].plot(resolutions, [numpy_results[r] for r in resolutions],
+                 "o-", linewidth=2, markersize=8, label="NumPy baseline")
+    for label, data in sorted(strategies.items()):
+        data.sort()
+        axes[0].plot([d[0] for d in data], [d[1] for d in data],
+                     "s--", linewidth=1.5, markersize=5, label=label)
+    axes[0].set_xlabel("Resolution")
+    axes[0].set_ylabel("Execution Time (s)")
+    axes[0].set_title("Execution Time")
+    axes[0].set_yscale("log")
+    axes[0].legend(fontsize=7)
+    axes[0].grid(True, alpha=0.3, which="both")
+
+    # — Speedup vs NumPy —
+    for label, data in sorted(strategies.items()):
+        data.sort()
+        speedups = [(res, numpy_results[res] / t) for res, t in data if res in numpy_results]
+        axes[1].plot([s[0] for s in speedups], [s[1] for s in speedups],
+                     "s-", linewidth=1.5, markersize=5, label=label)
+    axes[1].axhline(y=1, color="r", linestyle="--", alpha=0.5, label="NumPy baseline")
+    axes[1].set_xlabel("Resolution")
+    axes[1].set_ylabel("Speedup (vs NumPy)")
+    axes[1].set_title("Speedup")
+    axes[1].legend(fontsize=7)
+    axes[1].grid(True, alpha=0.3)
+
+    plt.tight_layout()
+    plt.savefig(save_path, dpi=150)
+    plt.close()
+    print(f"Plot saved to {save_path}")
+
+
 def save_results(results, filename: str):
     """Save benchmark results to CSV."""
     with open(filename, "w", newline="") as f:
@@ -210,8 +272,6 @@ def save_results(results, filename: str):
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    import multiprocessing
-
     print(f"Connecting to Dask scheduler at {SCHEDULER_ADDRESS} …")
     # Set timeout so we get a clear error if the scheduler is not yet running
     client = Client(SCHEDULER_ADDRESS, timeout="30s")
@@ -231,6 +291,7 @@ if __name__ == "__main__":
     )
 
     save_results(results, f"{RESULT_DIR}/distributed_benchmark.csv")
+    plot_results(results, f"{RESULT_DIR}/distributed_benchmark.png")
 
     # ── Quick correctness check ──────────────────────────────────────────
     print("\nRunning correctness check (256x256) …")
