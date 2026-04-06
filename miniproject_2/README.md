@@ -1,7 +1,7 @@
 # Miniproject 2 Outline
 
 ## 1. Introduction
-- Overview of implementations covered: NumPy baseline, Multiprocessing, Dask (single-node), Dask Distributed (cluster)
+- Overview of implementations covered: NumPy baseline( imported from MiniProject 1), Multiprocessing, Dask (single-node), Dask Distributed (cluster)
 
 ```
 miniproject_2/
@@ -49,8 +49,6 @@ miniproject_2/
     ├── multi_process_mb_set_*.csv     # Mandelbrot output arrays (MP runs)
     └── timing_results.csv             # General timing log for the basic mp implementation
 ```
-
-
 ---
 
 ## 2. Implementation Overview
@@ -65,7 +63,7 @@ miniproject_2/
 ## 3. Multiprocessing Results
 
 ### 3.1 Optimal Chunk Size Analysis
-- Plot: execution time vs chunk size for each resolution (from `chunk_benchmark_*.csv`)
+- ![Chart](../results/chunk_benchmark_8192.png)
 - Key finding: what chunk size minimises overhead vs load imbalance at each resolution
 
 ### 3.2 Speedup vs Number of Processes
