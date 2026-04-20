@@ -119,6 +119,7 @@ def step_dask(pos, vel, n_chunks=4):
 
 # check('dask', forces_dask(pos_t, n_chunks=4), F_ref)
 
+"""
 import cupy as cp
 
 def forces_cupy(pos_cp):
@@ -137,9 +138,12 @@ pos_cp = cp.array(pos_t)
 F_cp   = forces_cupy(pos_cp)
 check('cupy', cp.asnumpy(F_cp), F_ref)
 
+"""
+
 N_VALUES = [100, 200, 500, 1000, 2000]
 T = 10
 results = {}   # paradigm → list of ms/step
+
 
 for N in N_VALUES:
     pos, vel = init_galaxy(N)
@@ -148,7 +152,6 @@ for N in N_VALUES:
         pos, vel = step_vectorized(pos, vel)   # ← swap for other paradigms
     ms_per_step = (time.perf_counter() - t0) / T * 1000
     print(f"N={N}  {ms_per_step:.3f} ms/step")
-```
 
 
 import pandas as pd, socket
