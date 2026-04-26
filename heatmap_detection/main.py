@@ -11,11 +11,13 @@ import logging
 AGG_FUNC = 'mean'  # 'mean' or 'std'
 ANOMALY_YEAR = 2016
 
+FILE_CORE_NAME = "mhw2016JFM"
+
+YEARS = [2013, 2014, 2015, 2016, 2017, 2018, 2019]
+
 # ── Configuration ───────────────────────────────────────────────────────────
 DATA_DIR = "Data"
 RESULTS_DIR = "Results"
-
-FILE_CORE_NAME = "mhw2016JFM"
 
 AVALIABLE_MEASUREMENTS = ['wind_intensity', 'sst', 'tcc'] 
 
@@ -35,8 +37,6 @@ MEASUREMENT_UNITS = { 'sst': '°C',
 MEASUREMENT_LABELS = { 'sst': 'Sea Surface Temperature',
                        'tcc': 'Total Cloud Cover',
                        'wind_intensity': 'Wind Intensity'}
-
-YEARS = [2013, 2014, 2015, 2016, 2017, 2018, 2019]
 
 CELCIUS_OFFSET = 273.15
 
