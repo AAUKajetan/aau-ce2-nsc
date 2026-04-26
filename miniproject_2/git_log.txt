@@ -1,0 +1,272 @@
+2026-04-06 777d187 report
+
+ miniproject_2/README.md  |  72 ++++++++++++++++++++++++++++++++++++-----------
+ miniproject_2/Report.pdf | Bin 0 -> 1041788 bytes
+ 2 files changed, 55 insertions(+), 17 deletions(-)
+2026-04-06 7e54df9 md pic test
+
+ miniproject_2/README.md | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+2026-04-06 3c162a4 remove docs
+
+ .gitignore | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+2026-04-06 c5caa37 Remove docs files from tracking (now gitignored)
+
+ miniproject_2/docs/ASSIGNMENT_ANSWERS.md | 141 --------------------
+ miniproject_2/docs/BENCHMARK_SUMMARY.md  | 215 -------------------------------
+ miniproject_2/docs/CODEBASE.md           |  50 -------
+ 3 files changed, 406 deletions(-)
+2026-04-06 9eab566 docs
+
+ .gitignore                               |   1 -
+ miniproject_2/docs/ASSIGNMENT_ANSWERS.md | 141 ++++++++++++++++++++
+ miniproject_2/docs/BENCHMARK_SUMMARY.md  | 215 +++++++++++++++++++++++++++++++
+ 3 files changed, 356 insertions(+), 1 deletion(-)
+2026-04-06 f10de1e paraller worker script
+
+ run_on_workers.sh | 31 ++++++++++++++++++++++++++-----
+ 1 file changed, 26 insertions(+), 5 deletions(-)
+2026-04-06 0fc187d results with PNG
+
+ .gitignore                                      |   4 +-
+ miniproject_2/README.md                         | 107 ++++++++++++++++++++++++
+ miniproject_2/docs/CODEBASE.md                  |  50 +++++++++++
+ miniproject_2/results/distributed_benchmark.csv |  80 +++++++++---------
+ miniproject_2/results/distributed_benchmark.png | Bin 0 -> 240558 bytes
+ 5 files changed, 200 insertions(+), 41 deletions(-)
+2026-04-06 8a42185 distrubuted dask results
+
+ miniproject_2/config.py                          |   6 +-
+ miniproject_2/dask_distributed_implementation.py | 167 ++++++++++++++++-------
+ miniproject_2/dask_implementation.py             |  97 ++++---------
+ miniproject_2/miniproject_1.py                   |   4 +-
+ miniproject_2/results/distributed_benchmark.csv  |  41 ++++++
+ 5 files changed, 186 insertions(+), 129 deletions(-)
+2026-04-06 8d2e992 run on all
+
+ run_on_workers.sh | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+2026-04-06 bd9d980 multiworker script
+
+ =3.1.0                                           |  11 +
+ README.md                                        |   2 +
+ miniproject_2/dask_distributed_implementation.py | 243 +++++++++++++++++++++++
+ run_on_workers.sh                                |  26 +++
+ 4 files changed, 282 insertions(+)
+2026-04-04 772a30e gitignore
+
+ .gitignore | 1 +
+ 1 file changed, 1 insertion(+)
+2026-04-03 a4f48a4 more tests
+
+ .gitignore                                     |   2 +-
+ miniproject_2/benchmark_chunk_size.py          |   4 +--
+ miniproject_2/config.py                        |   2 +-
+ miniproject_2/results/chunk_benchmark_4096.csv |  36 +++++++++++++++++++++++++
+ miniproject_2/results/chunk_benchmark_4096.png | Bin 0 -> 177944 bytes
+ miniproject_2/results/chunk_benchmark_8192.csv |  26 ++++++++++++++++++
+ miniproject_2/results/chunk_benchmark_8192.png | Bin 0 -> 172805 bytes
+ 7 files changed, 66 insertions(+), 4 deletions(-)
+2026-04-03 2f262da miniproject 2
+
+ .gitignore                                                  |   2 +-
+ {miniproject-1 => miniproject_1}/git log.txt                |   0
+ {miniproject-1 => miniproject_1}/miniproject-1-Report.html  |   0
+ {miniproject-1 => miniproject_1}/miniproject-1-Report.ipynb |   0
+ {miniproject-1 => miniproject_1}/miniproject-1-Report.pdf   | Bin
+ {miniproject-1 => miniproject_1}/miniproject-1.py           |  10 ++++++----
+ .../results/native_mb_set_1024x1024.csv                     |   0
+ .../results/native_mb_set_2048x2048.csv                     |   0
+ .../results/native_mb_set_256x256.csv                       |   0
+ .../results/native_mb_set_4096x4096.csv                     |   0
+ .../results/native_mb_set_512x512.csv                       |   0
+ .../results/numba_mb_set_1024x1024.csv                      |   0
+ .../results/numba_mb_set_2048x2048.csv                      |   0
+ .../results/numba_mb_set_256x256.csv                        |   0
+ .../results/numba_mb_set_4096x4096.csv                      |   0
+ .../results/numba_mb_set_512x512.csv                        |   0
+ .../results/numpy_mb_set_1024x1024.csv                      |   0
+ .../results/numpy_mb_set_2048x2048.csv                      |   0
+ .../results/numpy_mb_set_256x256.csv                        |   0
+ .../results/numpy_mb_set_4096x4096.csv                      |   0
+ .../results/numpy_mb_set_512x512.csv                        |   0
+ {miniproject-1 => miniproject_1}/results/timing_results.csv |   0
+ requirements.txt                                            |   9 +++++----
+ 23 files changed, 12 insertions(+), 9 deletions(-)
+2026-04-03 b31501d miniproject 2
+
+ miniproject_2/benchmark_chunk_size.py              |  180 +
+ miniproject_2/config.py                            |   12 +
+ miniproject_2/dask_implementation.py               |  269 ++
+ miniproject_2/miniproject_1.py                     |  155 +
+ miniproject_2/mp_implementation.py                 |  128 +
+ miniproject_2/results/chunk_benchmark_1024.csv     |   51 +
+ miniproject_2/results/chunk_benchmark_1024.png     |  Bin 0 -> 173480 bytes
+ miniproject_2/results/chunk_benchmark_2048.csv     |   51 +
+ miniproject_2/results/chunk_benchmark_2048.png     |  Bin 0 -> 159785 bytes
+ miniproject_2/results/dask_vs_numpy_benchmark.csv  |   20 +
+ miniproject_2/results/dask_vs_numpy_comparison.png |  Bin 0 -> 147792 bytes
+ .../results/multi_process_mb_set_1024x1024.csv     | 1024 +++++
+ .../results/multi_process_mb_set_2048x2048.csv     | 2048 ++++++++++
+ .../results/multi_process_mb_set_256x256.csv       |  256 ++
+ .../results/multi_process_mb_set_4096x4096.csv     | 4096 ++++++++++++++++++++
+ .../results/multi_process_mb_set_512x512.csv       |  512 +++
+ miniproject_2/results/timing_results.csv           |    7 +
+ 17 files changed, 8809 insertions(+)
+2026-03-12 ce7dc07 final reflections
+
+ .../miniproject-1-Report-checkpoint.ipynb          | 262 ---------------------
+ git log.txt => miniproject-1/git log.txt           |   0
+ miniproject-1/miniproject-1-Report.html            |  11 +
+ miniproject-1/miniproject-1-Report.ipynb           |  13 +-
+ miniproject-1/miniproject-1-Report.pdf             | Bin 319142 -> 325222 bytes
+ 5 files changed, 23 insertions(+), 263 deletions(-)
+2026-03-12 3898a0a report +more logs
+
+ git log.txt                                        |    8 +
+ .../miniproject-1-Report-checkpoint.ipynb          |  262 +
+ miniproject-1/miniproject-1-Assignment.ipynb       |   80 -
+ miniproject-1/miniproject-1-Report.html            | 8059 ++++++++++++++++++++
+ miniproject-1/miniproject-1-Report.ipynb           |  262 +
+ miniproject-1/miniproject-1-Report.pdf             |  Bin 0 -> 319142 bytes
+ miniproject-1/miniproject-1.py                     |    4 +-
+ 7 files changed, 8593 insertions(+), 82 deletions(-)
+2026-03-12 ff07157 more logs
+
+ miniproject-1/results/timing_results.csv | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+2026-03-12 3b09b02 more logs
+
+ git log.txt | 45 +++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 43 insertions(+), 2 deletions(-)
+2026-03-12 8e5599c Add large CSV files to .gitignore
+
+ .gitignore | 2 ++
+ 1 file changed, 2 insertions(+)
+2026-03-12 f212ef4 gitignore large fiels
+
+ .gitignore | 3 +++
+ 1 file changed, 3 insertions(+)
+2026-03-12 669e74a performance tests
+
+ miniproject-1/miniproject-1-Assignment.ipynb       |    6 -
+ miniproject-1/miniproject-1.py                     |   70 +-
+ ...tive_mb_set.csv => native_mb_set_1024x1024.csv} |    0
+ miniproject-1/results/native_mb_set_2048x2048.csv  | 2048 ++++++++++
+ miniproject-1/results/native_mb_set_256x256.csv    |  256 ++
+ miniproject-1/results/native_mb_set_4096x4096.csv  | 4096 ++++++++++++++++++++
+ miniproject-1/results/native_mb_set_512x512.csv    |  512 +++
+ ...numba_mb_set.csv => numba_mb_set_1024x1024.csv} |    0
+ miniproject-1/results/numba_mb_set_2048x2048.csv   | 2048 ++++++++++
+ miniproject-1/results/numba_mb_set_256x256.csv     |  256 ++
+ miniproject-1/results/numba_mb_set_4096x4096.csv   | 4096 ++++++++++++++++++++
+ miniproject-1/results/numba_mb_set_512x512.csv     |  512 +++
+ ...numpy_mb_set.csv => numpy_mb_set_1024x1024.csv} |    0
+ miniproject-1/results/numpy_mb_set_2048x2048.csv   | 2048 ++++++++++
+ miniproject-1/results/numpy_mb_set_256x256.csv     |  256 ++
+ miniproject-1/results/numpy_mb_set_4096x4096.csv   | 4096 ++++++++++++++++++++
+ miniproject-1/results/numpy_mb_set_512x512.csv     |  512 +++
+ miniproject-1/results/timing_results.csv           |   21 +-
+ 18 files changed, 20796 insertions(+), 37 deletions(-)
+2026-03-12 5f36113 Add note about Git logs availability
+
+ README.md | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+2026-03-12 561c8fa adding readme
+
+ README.md | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+2026-03-12 63fb864 adding logs
+
+ git log.txt | 89 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 89 insertions(+)
+2026-03-12 acbd586 Merge pull request #1 from AAUKajetan/local-mac
+2026-03-12 de284bf Merge branch 'main' into local-mac
+2026-03-12 d4b4f4a results and csvs
+
+ miniproject-1/miniproject-1.py           |   40 +-
+ miniproject-1/results/native_mb_set.csv  | 1024 ++++++++++++++++++++++++++++++
+ miniproject-1/results/numba_mb_set.csv   | 1024 ++++++++++++++++++++++++++++++
+ miniproject-1/results/numpy_mb_set.csv   | 1024 ++++++++++++++++++++++++++++++
+ miniproject-1/results/timing_results.csv |    4 +
+ 5 files changed, 3103 insertions(+), 13 deletions(-)
+2026-03-12 b667524 result to CSV
+
+ miniproject-1/miniproject-1.py | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+2026-03-12 e5fafcf numba implemetation
+
+ miniproject-1/miniproject-1.py | 75 ++++++++++++++++++++++++++++--------------
+ 1 file changed, 51 insertions(+), 24 deletions(-)
+2026-03-12 04d5a49  Miniproject 1: Native and NumPy
+
+ miniproject-1/README.md                      | 135 -----------------------
+ miniproject-1/basic.py                       |  41 -------
+ miniproject-1/main.py                        | 157 ---------------------------
+ miniproject-1/miniproject-1-Assignment.ipynb |  86 +++++++++++++++
+ miniproject-1/miniproject-1.py               |  95 ++++++++++++++++
+ 5 files changed, 181 insertions(+), 333 deletions(-)
+2026-03-02 701dbf4 class4
+
+ README.md               |   2 +
+ class3/exercises.ipynb  | 125 ++++++++++++++++++++++++++++
+ class4/exercises.ipynb  |  77 ++++++++++++++++++
+ miniproject-1/README.md | 135 +++++++++++++++++++++++++++++++
+ miniproject-1/basic.py  |  41 ++++++++++
+ miniproject-1/main.py   | 210 ++++++++++++++++++++++++++++++++++--------------
+ 6 files changed, 531 insertions(+), 59 deletions(-)
+2026-03-02 478eefd hanoi tower fun exercise
+
+ .gitignore                |   2 +
+ class2/exercises.ipynb    |   4 +-
+ hanoi_tower/README.md     | 283 ++++++++++++++++
+ hanoi_tower/main.py       | 811 ++++++++++++++++++++++++++++++++++++++++++++++
+ hanoi_tower/play.py       | 191 +++++++++++
+ hanoi_tower/solve.py      | 256 +++++++++++++++
+ hanoi_tower/submit_hpc.sh |  47 +++
+ hanoi_tower/test_local.py |  50 +++
+ hanoi_tower/train_hpc.py  |  95 ++++++
+ requirements.txt          |   1 +
+ 10 files changed, 1738 insertions(+), 2 deletions(-)
+2026-02-23 b992324 hello from the VM
+
+ class2/exercises.ipynb | 36 ++++++++++++++++++------------------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
+2026-02-22 11c525f cleanup
+
+ class2/exercises.ipynb | 61 ++++++++++++++++++++++++++------------------------
+ 1 file changed, 32 insertions(+), 29 deletions(-)
+2026-02-22 679f196 cleanup
+
+ class2/exercises.ipynb | 70 ++++++++++++++++++++++----------------------------
+ 1 file changed, 31 insertions(+), 39 deletions(-)
+2026-02-22 e4f89dd cleanup
+
+ class2/exercises.ipynb | 67 ++++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 57 insertions(+), 10 deletions(-)
+2026-02-22 1d88870 class 2 catchup
+
+ class2/class.ipynb     | 701 +++++++++++++++++++++++++++++++++++++++++++++++++
+ class2/exercises.ipynb | 247 +++++++++++++++++
+ requirements.txt       |   1 +
+ 3 files changed, 949 insertions(+)
+2026-02-10 a632b16 first class
+
+ requirements.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+2026-02-10 400b5bf first class
+
+ miniproject-1/main.py | 65 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 65 insertions(+)
+2026-02-09 eacdc12 init
+
+ .gitignore              |  8 ++++++++
+ class1/1-1-registers.py | 53 +++++++++++++++++++++++++++++++++++++++++++++++++
+ requirements.txt        |  1 +
+ 3 files changed, 62 insertions(+)
+2026-02-09 2d26188 init
+
+ .../copilot-guardrails.instructions.md             | 33 +++++++++
+ .gitignore                                         | 78 ++++++++++++++++++++++
+ 2 files changed, 111 insertions(+)

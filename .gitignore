@@ -92,3 +92,7 @@ htmlcov/
 */results/*_8192x8192.csv
 
 docs/
+
+*env/
+
+Data/
