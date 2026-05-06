@@ -7,8 +7,9 @@ from src import (
     NumpyCalculator,
     NumbaCalculator,
     MultiprocessCalculator,
-
+    CupyCalculator
 )
+
 
 # Small config for fast tests
 SMALL_CONFIG = MandelbrotConfig(
@@ -26,6 +27,13 @@ CALCULATORS = [
     NumbaCalculator,
     MultiprocessCalculator,
 ]
+
+# Add CuPy calculator only if CUDA is available
+try:
+    import cupy
+    CALCULATORS.append(CupyCalculator)
+except (ImportError, Exception):
+    pass
 
 
 @pytest.fixture(params=CALCULATORS, ids=lambda cls: cls.__name__)

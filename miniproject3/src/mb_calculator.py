@@ -7,15 +7,32 @@ from .config import MandelbrotConfig
 
 
 class MandelbrotCalculator(ABC):
-    """Base class for all Mandelbrot set calculators."""
+    """Base class for all Mandelbrot set calculators.
+
+    Provides a common interface for computing the Mandelbrot set using
+    different strategies (pure Python, NumPy, Numba, multiprocessing, CUDA).
+    """
 
     def __init__(self, config: MandelbrotConfig):
+        """Initialise the calculator with a Mandelbrot configuration.
+
+        Parameters
+        ----------
+        config : MandelbrotConfig
+            Configuration specifying the complex plane bounds,
+            image resolution (width, height), and maximum iterations.
+        """
         self.config = config
 
     @abstractmethod
     def calculate(self) -> np.ndarray:
-        """
-        Compute the Mandelbrot set and return a 2D array of iteration counts.
-        Shape: (config.height, config.width), dtype: int
+        """Compute the Mandelbrot set.
+
+        Returns
+        -------
+        np.ndarray
+            2D integer array of shape (height, width) where each
+            element is the iteration count at which the corresponding
+            point escaped (or max_iter if it did not escape).
         """
         ...

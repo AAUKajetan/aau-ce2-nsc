@@ -8,7 +8,24 @@ from .mb_calculator import MandelbrotCalculator
 
 
 def _generate_chunks(cfg: MandelbrotConfig):
-    """Generate chunk metadata with bounds and pixel positions."""
+    """Generate chunk metadata with bounds and pixel positions.
+
+    Splits the full image into rectangular tiles based on cfg.chunk_size.
+    Each chunk contains the pixel offsets and corresponding complex-plane
+    bounds needed to compute that tile independently.
+
+    Parameters
+    ----------
+    cfg : MandelbrotConfig
+        Configuration with width, height, chunk_size, and plane bounds.
+
+    Returns
+    -------
+    list[tuple]
+        Each element is (start_col, start_row, c_xmin, c_xmax, c_ymin,
+        c_ymax, c_width, c_height) describing one chunk's position
+        and complex-plane extent.
+    """
     chunk_w = cfg.chunk_size
     chunk_h = cfg.chunk_size
     # Use (n-1) divisor to match np.linspace endpoint semantics
@@ -33,7 +50,23 @@ def _generate_chunks(cfg: MandelbrotConfig):
 
 
 def _process_chunk(args):
-    """Compute a single chunk by reusing NumpyCalculator."""
+    """Compute a single chunk by delegating to NumpyCalculator.
+
+    Creates a MandelbrotConfig scoped to the chunk's bounds and resolution,
+    then runs NumpyCalculator on it.
+
+    Parameters
+    ----------
+    args : tuple
+        (start_col, start_row, c_xmin, c_xmax, c_ymin, c_ymax,
+        c_width, c_height, max_iter).
+
+    Returns
+    -------
+    tuple
+        (start_col, start_row, result_array) where result_array is a
+        2D np.ndarray of iteration counts for the chunk.
+    """
     from .mb_numpy_calculator import NumpyCalculator
 
     start_col, start_row, c_xmin, c_xmax, c_ymin, c_ymax, c_width, c_height, max_iter = args
@@ -53,11 +86,35 @@ class MultiprocessCalculator(MandelbrotCalculator):
     """Multiprocessing chunked Mandelbrot calculator (NumPy per chunk)."""
 
     def __init__(self, config: MandelbrotConfig, num_processes: int | None = None, chunk_size: int | None = None):
+        """Initialise the multiprocess calculator.
+
+        Parameters
+        ----------
+        config : MandelbrotConfig
+            Configuration with plane bounds, resolution, and max_iter.
+        num_processes : int or None
+            Number of worker processes. Defaults to config value
+            or system CPU count.
+        chunk_size : int or None
+            Tile size (pixels) for splitting the image. Defaults to
+            config.chunk_size.
+        """
         super().__init__(config)
         self.num_processes = num_processes or config.num_processes or mp.cpu_count()
         self.chunk_size = chunk_size or config.chunk_size
 
     def calculate(self) -> np.ndarray:
+        """Compute the Mandelbrot set using multiprocessing.
+
+        Splits the image into chunks, distributes them across a process pool,
+        and reassembles the results into the final image.
+
+        Returns
+        -------
+        np.ndarray
+            2D integer array of shape (height, width) containing
+            the escape iteration count for each pixel.
+        """
         cfg = self.config
         # Override chunk_size for chunk generation
         cfg_for_chunks = MandelbrotConfig(

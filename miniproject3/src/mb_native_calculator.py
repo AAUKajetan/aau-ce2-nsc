@@ -6,9 +6,24 @@ from .mb_calculator import MandelbrotCalculator
 
 
 class NativeCalculator(MandelbrotCalculator):
-    """Pure Python nested-loop Mandelbrot calculator."""
+    """Pure Python nested-loop Mandelbrot calculator.
+
+    Iterates over every pixel sequentially using standard Python arithmetic.
+    Simplest implementation; useful as a correctness baseline.
+    """
 
     def calculate(self) -> np.ndarray:
+        """Compute the Mandelbrot set using pure Python nested loops.
+
+        For each pixel (x, y), maps it to a point c in the complex plane
+        and iterates z = z² + c until |z| > 2 or max_iter is reached.
+
+        Returns
+        -------
+        np.ndarray
+            2D integer array of shape (height, width) containing
+            the escape iteration count for each pixel.
+        """
         cfg = self.config
         mb_set = np.zeros((cfg.height, cfg.width), dtype=int)
 
