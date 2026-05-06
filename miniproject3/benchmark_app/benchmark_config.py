@@ -8,6 +8,8 @@ from src import (
     NumpyCalculator,
     NumbaCalculator,
     MultiprocessCalculator,
+    CupyCalculator,
+    DaskCalculator
 )
 
 # Registry of available calculators by name
@@ -16,7 +18,19 @@ CALCULATOR_REGISTRY: dict[str, type[MandelbrotCalculator]] = {
     "numpy": NumpyCalculator,
     "numba": NumbaCalculator,
     "multiprocess": MultiprocessCalculator,
+    "cupy": CupyCalculator,
+    "dask": DaskCalculator,
 }
+
+# Create multiprocess variants for each base calculator
+# Note: cupy is excluded — CUDA contexts cannot be shared across forked processes
+_MP_BASES = ["native", "numpy", "numba"]
+for _base in _MP_BASES:
+    _cls_name = f"Multiprocess_{_base.capitalize()}Calculator"
+    _variant = type(_cls_name, (MultiprocessCalculator,), {
+        "__init__": lambda self, config, _b=_base: MultiprocessCalculator.__init__(self, config, base_calculator=_b),
+    })
+    CALCULATOR_REGISTRY[f"multiprocess_{_base}"] = _variant
 
 
 @dataclass
@@ -25,7 +39,7 @@ class BenchmarkConfig:
     mb_config: MandelbrotConfig = field(default_factory=MandelbrotConfig)
 
     # Benchmark-specific parameters
-    calculators: list[str] = field(default_factory=lambda: ["native", "numpy", "numba", "multiprocess"])
+    calculators: list[str] = field(default_factory=lambda: ["native", "numpy", "numba", "multiprocess", "cupy"])
     resolutions: list[int] = field(default_factory=lambda: [64, 128, 256, 512, 1024])
     num_runs: int = 3  # Number of runs per (calculator, resolution) for averaging
     warmup_runs: int = 1  # Warmup runs (not counted in timing)

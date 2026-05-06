@@ -54,6 +54,7 @@ class CupyCalculator(MandelbrotCalculator):
         y = cp.linspace(cfg.ymin, cfg.ymax, cfg.height)
         X, Y = cp.meshgrid(x, y)
         c = X + 1j * Y
+        del x, y, X, Y
 
         z = cp.zeros_like(c)
         output = cp.zeros(c.shape, dtype=cp.int32)
@@ -63,5 +64,9 @@ class CupyCalculator(MandelbrotCalculator):
             z[mask] = z[mask] ** 2 + c[mask]
             output[mask] = n + 1
 
-        return cp.asnumpy(output)
+        result = cp.asnumpy(output)
+        del c, z, output, mask
+        cp.get_default_memory_pool().free_all_blocks()
+
+        return result
 

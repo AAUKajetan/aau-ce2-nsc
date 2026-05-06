@@ -1,5 +1,6 @@
 import numpy as np
 import pytest
+import logging
 
 from src import (
     MandelbrotConfig,
@@ -7,8 +8,11 @@ from src import (
     NumpyCalculator,
     NumbaCalculator,
     MultiprocessCalculator,
-    CupyCalculator
+    CupyCalculator,
+    DaskCalculator
 )
+
+logging.basicConfig(level=logging.INFO, format='[%(levelname)s] %(message)s')
 
 
 # Small config for fast tests
@@ -26,14 +30,16 @@ CALCULATORS = [
     NumpyCalculator,
     NumbaCalculator,
     MultiprocessCalculator,
+    DaskCalculator,
 ]
 
 # Add CuPy calculator only if CUDA is available
 try:
     import cupy
     CALCULATORS.append(CupyCalculator)
+    logging.info("CuPy is available, including CupyCalculator in tests.")
 except (ImportError, Exception):
-    pass
+    logging.info("CuPy is not available, skipping CupyCalculator tests.")
 
 
 @pytest.fixture(params=CALCULATORS, ids=lambda cls: cls.__name__)

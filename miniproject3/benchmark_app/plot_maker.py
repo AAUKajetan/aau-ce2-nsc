@@ -55,7 +55,13 @@ class PlotMaker:
         grouped = self._group_by_calculator()
 
         if baseline not in grouped:
-            raise ValueError(f"Baseline '{baseline}' not found in results. Available: {list(grouped.keys())}")
+            # Fall back to the first available calculator as baseline
+            available = list(grouped.keys())
+            if len(available) < 2:
+                print(f"Skipping speedup plot: need at least 2 calculators, got {available}")
+                return plt.figure()
+            baseline = available[0]
+            print(f"Baseline 'NativeCalculator' not in results, using '{baseline}' instead.")
 
         baseline_results = {r.resolution: r.mean_time for r in grouped[baseline]}
 

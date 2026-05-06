@@ -64,20 +64,20 @@ class TestProcessChunk:
     """Unit tests for the worker function that computes a single chunk."""
 
     def test_returns_correct_shape(self):
-        # chunk args: (start_col, start_row, xmin, xmax, ymin, ymax, width, height, max_iter)
-        args = (0, 0, -2.0, 1.0, -1.5, 1.5, 16, 16, 50)
+        # chunk args: (start_col, start_row, xmin, xmax, ymin, ymax, width, height, max_iter, base_calculator)
+        args = (0, 0, -2.0, 1.0, -1.5, 1.5, 16, 16, 50, "numpy")
         start_col, start_row, result = _process_chunk(args)
         assert result.shape == (16, 16)
         assert start_col == 0
         assert start_row == 0
 
     def test_returns_integer_array(self):
-        args = (0, 0, -2.0, 1.0, -1.5, 1.5, 8, 8, 20)
+        args = (0, 0, -2.0, 1.0, -1.5, 1.5, 8, 8, 20, "numpy")
         _, _, result = _process_chunk(args)
         assert np.issubdtype(result.dtype, np.integer)
 
     def test_preserves_start_offsets(self):
-        args = (32, 64, -1.0, 0.0, 0.0, 1.0, 16, 16, 30)
+        args = (32, 64, -1.0, 0.0, 0.0, 1.0, 16, 16, 30, "numpy")
         start_col, start_row, _ = _process_chunk(args)
         assert start_col == 32
         assert start_row == 64
