@@ -121,7 +121,9 @@ class MultiprocessCalculator(MandelbrotCalculator):
             "native", "numpy", "numba". Defaults to "numpy".
         """
         super().__init__(config)
-        self.num_processes = num_processes or config.num_processes or mp.cpu_count()
+        available_cores = mp.cpu_count()
+        max_workers = max(1, available_cores - 2) if available_cores > 2 else available_cores
+        self.num_processes = num_processes or config.num_processes or max_workers
         self.chunk_size = chunk_size or config.chunk_size
         self.base_calculator = base_calculator
 
@@ -150,7 +152,7 @@ class MultiprocessCalculator(MandelbrotCalculator):
         chunks = _generate_chunks(cfg_for_chunks)
         work_items = [(*chunk, cfg.max_iter, self.base_calculator) for chunk in chunks]
 
-        logger.info("Starting MultiprocessCalculator with %d processes, chunk size %d, "
+        logger.debug("Starting MultiprocessCalculator with %d processes, chunk size %d, "
                     "base calculator '%s', total chunks: %d",
                     self.num_processes, self.chunk_size, self.base_calculator, len(chunks))
         logger.debug(

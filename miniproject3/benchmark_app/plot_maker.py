@@ -4,7 +4,10 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 
-from benchmark_runner import BenchmarkResult
+from .benchmark_runner import BenchmarkResult
+from .device_scanner import scan_devices, format_device_info
+
+
 
 
 class PlotMaker:
@@ -14,6 +17,8 @@ class PlotMaker:
         self.results = results
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
+        info = scan_devices()
+        self.device_info = format_device_info(info)
 
     def _group_by_calculator(self) -> dict[str, list[BenchmarkResult]]:
         """Group results by calculator name."""
@@ -43,7 +48,8 @@ class PlotMaker:
         ax.set_xscale('log', base=2)
         ax.set_yscale('log')
 
-        plt.tight_layout()
+        fig.text(0.5, 0.01, self.device_info, ha='center', fontsize=7, color='gray')
+        plt.tight_layout(rect=[0, 0.03, 1, 1])
         if save:
             fig.savefig(self.output_dir / "time_vs_resolution.png", dpi=150)
         if show:
@@ -87,7 +93,8 @@ class PlotMaker:
         ax.grid(True, alpha=0.3, axis='y')
         ax.axhline(y=1, color='gray', linestyle='--', alpha=0.5)
 
-        plt.tight_layout()
+        fig.text(0.5, 0.01, self.device_info, ha='center', fontsize=7, color='gray')
+        plt.tight_layout(rect=[0, 0.03, 1, 1])
         if save:
             fig.savefig(self.output_dir / "speedup.png", dpi=150)
         if show:
@@ -113,7 +120,8 @@ class PlotMaker:
         ax.set_xscale('log')
         ax.set_yscale('log')
 
-        plt.tight_layout()
+        fig.text(0.5, 0.01, self.device_info, ha='center', fontsize=7, color='gray')
+        plt.tight_layout(rect=[0, 0.03, 1, 1])
         if save:
             fig.savefig(self.output_dir / "scaling.png", dpi=150)
         if show:

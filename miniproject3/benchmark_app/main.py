@@ -3,32 +3,38 @@ import logging
 import sys
 from pathlib import Path
 
-# Add project root to path for src imports
+# Add project root to path for src and benchmark_app package imports
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(name)s: %(message)s")
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s", datefmt="%H:%M:%S")
 
-from benchmark_config import BenchmarkConfig
-from benchmark_runner import BenchmarkRunner
-from plot_maker import PlotMaker
-from src.config import MandelbrotConfig
+from benchmark_app import BenchmarkConfig, BenchmarkRunner, PlotMaker, scan_devices
+
+from src import MandelbrotConfig
 
 logger = logging.getLogger(__name__)
 
 
 def main():
+    scan_devices()
+
     config = BenchmarkConfig(
         mb_config=MandelbrotConfig(
             xmin=-2.0, xmax=1.0,
             ymin=-1.5, ymax=1.5,
             max_iter=100,
-            chunk_size=64,  # Only relevant for multiprocess calculators
+            chunk_size=128*2,  # Only relevant for multiprocess calculators
         ),
+
         calculators=["native", "numba", "cupy", "multiprocess_numpy", "multiprocess_numba"],
         resolutions=[256, 512, 1024, 2048, 4096, 8192, 16384, 32768],
+
         num_runs=3,
         warmup_runs=1,
+
+        breakout_time=5.0,  # Skip higher resolutions if avg time exceeds this (seconds)
     )
+
 
     logger.info("Starting benchmark...")
     logger.info(f"Calculators: {config.calculators}")
@@ -37,6 +43,7 @@ def main():
 
     runner = BenchmarkRunner(config)
     results = runner.run()
+    runner.save_csv(output_dir=config.output_dir)
 
     logger.info("Generating plots...")
     plotter = PlotMaker(results, output_dir=config.output_dir)

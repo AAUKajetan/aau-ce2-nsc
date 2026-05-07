@@ -44,6 +44,7 @@ class BenchmarkConfig:
     num_runs: int = 3  # Number of runs per (calculator, resolution) for averaging
     warmup_runs: int = 1  # Warmup runs (not counted in timing)
     output_dir: str = "results"
+    breakout_time: float = 10.0  # Time threshold to skip higher resolutions for a calculator
 
     def get_calculator_classes(self) -> list[type[MandelbrotCalculator]]:
         """Resolve calculator names to classes."""

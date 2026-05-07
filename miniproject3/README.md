@@ -16,12 +16,15 @@ miniproject3/
 ├── benchmark_app/            # Benchmark application
 │   ├── main.py               # Entry point
 │   ├── benchmark_config.py   # BenchmarkConfig dataclass + calculator registry
-│   ├── benchmark_runner.py   # BenchmarkRunner — times calculators
+│   ├── benchmark_runner.py   # BenchmarkRunner — times calculators, saves CSV
+│   ├── device_scanner.py     # Hardware detection (CPU, GPU, CUDA)
 │   └── plot_maker.py         # PlotMaker — generates plots from results
 ├── test/                     # Tests (pytest)
 │   ├── calculator_test.py    # Generic contract tests for all calculators
-│   └── test_helpers.py       # Unit tests for internal functions
-├── results/                  # Benchmark output (plots)
+│   ├── test_helpers.py       # Unit tests for internal functions
+│   ├── test_benchmark_runner.py  # BenchmarkRunner tests
+│   └── test_device_scanner.py    # Device scanner tests
+├── results/                  # Benchmark output (plots + CSV)
 └── README.md
 ```
 
@@ -113,6 +116,7 @@ The benchmark generates three plots saved to `results/`:
 
 ![Time vs Resolution](results/time_vs_resolution.png)
 ![Speedup](results/speedup.png)
+![Scaling](results/scaling.png)
 
 ### Speedup Summary
 
@@ -169,7 +173,7 @@ cd miniproject3
 pytest test/ -v
 ```
 
-### Test Cases (45 total)
+### Test Cases (71 total)
 
 **`calculator_test.py`** — contract tests applied to ALL implementations:
 1. `test_output_shape` — result has correct (height, width) dimensions
@@ -185,6 +189,15 @@ pytest test/ -v
 - `_generate_chunks`: chunk count, coverage, bounds correctness
 - `_process_chunk`: shape, dtype, offset preservation
 - `_numba_compute`: shape, known-point behavior, cross-check vs native
+
+**`test_benchmark_runner.py`** — tests for the benchmark infrastructure:
+- `BenchmarkResult`: mean, std, min calculations
+- `BenchmarkRunner`: correct result count, calculator names, resolutions, timing, multi-calculator runs, early stopping on slow calculators
+
+**`test_device_scanner.py`** — tests for hardware detection:
+- `scan_devices`: returns dict with all required keys, correct types
+- `format_device_info`: comma-delimited output, handles bytes GPU names, CUDA/no-CUDA paths
+- Internal helpers: `_get_cpu_info`, `_get_memory_gb`, `_get_physical_cores`
 
 ## Requirements
 
@@ -209,16 +222,20 @@ cd miniproject3
 python benchmark_app/main.py
 ```
 
-Results (plots) are saved to `results/`.
+Results (plots and CSV) are saved to `results/`.
+
+The benchmark outputs:
+- `results/timing_results.csv` — raw timing data (calculator, resolution, mean, std, min, individual runs)
+- `results/time_vs_resolution.png` — log-scale line plot
+- `results/speedup.png` — bar chart of speedup vs baseline
+- `results/scaling.png` — log-log scaling plot
 
 ### Customising the Benchmark
 
 Edit `benchmark_app/main.py` or create your own script:
 
 ```python
-from benchmark_config import BenchmarkConfig
-from benchmark_runner import BenchmarkRunner
-from plot_maker import PlotMaker
+from benchmark_app import BenchmarkConfig, BenchmarkRunner, PlotMaker
 from src.config import MandelbrotConfig
 
 config = BenchmarkConfig(
@@ -231,6 +248,7 @@ config = BenchmarkConfig(
 
 runner = BenchmarkRunner(config)
 results = runner.run()
+runner.save_csv(output_dir="results")
 
 PlotMaker(results).make_all_plots(show=True)
 ```
