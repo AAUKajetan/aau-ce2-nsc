@@ -1,5 +1,5 @@
 # Miniproject 3 — Mandelbrot Set Benchmark
-
+( this is not the school report - this is just a docs for the code )
 <table>
 <tr>
 <td width="65%">
