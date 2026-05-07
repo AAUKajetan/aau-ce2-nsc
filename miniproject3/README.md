@@ -204,7 +204,6 @@ The benchmark generates three plots saved to `results/`:
 
 - **Time vs Resolution** (`results/time_vs_resolution.png`) — log-scale line plot showing how each implementation scales with image size
 - **Speedup** (`results/speedup.png`) — bar chart of speedup relative to the baseline at each resolution
-- **Scaling** (`results/scaling.png`) — log-log plot of execution time vs total pixel count
 
 <p align="center">
   <img src="results/time_vs_resolution.png" width="750" alt="Time vs Resolution">
