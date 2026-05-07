@@ -1,5 +1,6 @@
 from .config import MandelbrotConfig
 from .mb_calculator import MandelbrotCalculator
+from .mb_cuda_calculator import CudaCalculator
 from .mb_cupy_calculator import CupyCalculator
 from .mb_dask_calculator import DaskCalculator
 from .mb_native_calculator import NativeCalculator

@@ -135,3 +135,43 @@ class PlotMaker:
         self.plot_scaling(save=save, show=show)
         if save:
             print(f"Plots saved to {self.output_dir}/")
+
+    @staticmethod
+    def plot_mandelbrot(result: np.ndarray, output_path: str | Path | None = None,
+                        show: bool = False, title: str = "Mandelbrot Set") -> plt.Figure:
+        """Render the Mandelbrot set as a coloured image.
+
+        Parameters
+        ----------
+        result : np.ndarray
+            2D array of iteration counts from any calculator's calculate() method.
+        output_path : str or Path, optional
+            If provided, saves the plot to this path.
+        show : bool
+            Whether to display the plot interactively.
+        title : str
+            Plot title.
+
+        Returns
+        -------
+        plt.Figure
+            The generated figure.
+        """
+        fig, ax = plt.subplots(figsize=(10, 8))
+
+        # Use log scale for better colour contrast near the boundary
+        with np.errstate(divide='ignore', invalid='ignore'):
+            display = np.log1p(result.astype(np.float64))
+
+        im = ax.imshow(display, cmap='inferno', origin='lower', interpolation='bilinear')
+        ax.set_title(title)
+        ax.set_xlabel("Re")
+        ax.set_ylabel("Im")
+        fig.colorbar(im, ax=ax, label="log(iterations + 1)")
+        plt.tight_layout()
+
+        if output_path:
+            fig.savefig(output_path, dpi=200, bbox_inches='tight')
+        if show:
+            plt.show()
+        return fig

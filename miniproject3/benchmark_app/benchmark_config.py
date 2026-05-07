@@ -9,6 +9,7 @@ from src import (
     NumbaCalculator,
     MultiprocessCalculator,
     CupyCalculator,
+    CudaCalculator,
     DaskCalculator
 )
 
@@ -19,6 +20,7 @@ CALCULATOR_REGISTRY: dict[str, type[MandelbrotCalculator]] = {
     "numba": NumbaCalculator,
     "multiprocess": MultiprocessCalculator,
     "cupy": CupyCalculator,
+    "cuda": CudaCalculator,
     "dask": DaskCalculator,
 }
 

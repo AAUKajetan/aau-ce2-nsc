@@ -9,6 +9,7 @@ from src import (
     NumbaCalculator,
     MultiprocessCalculator,
     CupyCalculator,
+    CudaCalculator,
     DaskCalculator
 )
 
@@ -40,6 +41,15 @@ try:
     logging.info("CuPy is available, including CupyCalculator in tests.")
 except (ImportError, Exception):
     logging.info("CuPy is not available, skipping CupyCalculator tests.")
+
+# Add Numba CUDA JIT calculator if CUDA is available
+try:
+    from numba import cuda
+    if cuda.is_available():
+        CALCULATORS.append(CudaCalculator)
+        logging.info("Numba CUDA is available, including CudaCalculator in tests.")
+except (ImportError, Exception):
+    logging.info("Numba CUDA is not available, skipping CudaCalculator tests.")
 
 
 @pytest.fixture(params=CALCULATORS, ids=lambda cls: cls.__name__)

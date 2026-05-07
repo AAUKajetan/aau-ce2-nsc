@@ -13,6 +13,7 @@ from benchmark_app import BenchmarkConfig, BenchmarkRunner, PlotMaker, scan_devi
 from src import MandelbrotConfig
 
 logger = logging.getLogger(__name__)
+logging.getLogger("numba.cuda.cudadrv.driver").setLevel(logging.WARNING)
 
 
 def main():
@@ -26,13 +27,13 @@ def main():
             chunk_size=128*2,  # Only relevant for multiprocess calculators
         ),
 
-        calculators=["native", "numba", "cupy", "multiprocess_numpy", "multiprocess_numba"],
-        resolutions=[256, 512, 1024, 2048, 4096, 8192, 16384, 32768],
+        calculators=["numpy", "numba", "cupy", "cuda", "multiprocess_numpy", "multiprocess_numba"],
+        resolutions=[256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536],
 
         num_runs=3,
         warmup_runs=1,
 
-        breakout_time=5.0,  # Skip higher resolutions if avg time exceeds this (seconds)
+        breakout_time=5.5,  # Skip higher resolutions if avg time exceeds this (seconds)
     )
 
 
